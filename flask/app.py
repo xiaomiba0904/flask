@@ -1161,6 +1161,12 @@ class Flask(_PackageBoundObject):
         :param endpoint: the endpoint for the registered URL rule.  Flask
                          itself assumes the name of the view function as
                          endpoint
+
+                         flask是通过endpoint找到视图函数,并不是通过路由直接找到
+                         端点通常用作反向查询URL地址（viewfunction-->endpoint-->URL）
+                         例如，在flask中有个视图，你想把它关联到另一个视图上（或从站点的一处连接到另一处）
+                         不用去千辛万苦的写它对应的URL地址，直接使用URL_for()就可以啦
+
         :param view_func: the function to call when serving a request to the
                           provided endpoint
         :param provide_automatic_options: controls whether the ``OPTIONS``
@@ -1219,6 +1225,8 @@ class Flask(_PackageBoundObject):
             if old_func is not None and old_func != view_func:
                 raise AssertionError('View function mapping is overwriting an '
                                      'existing endpoint function: %s' % endpoint)
+
+            # 建立端点和视图函数的关系
             self.view_functions[endpoint] = view_func
 
     def route(self, rule, **options):
